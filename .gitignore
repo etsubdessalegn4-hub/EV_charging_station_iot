@@ -1,0 +1,11 @@
+# PlatformIO build output and editor files
+.pio/
+.vscode/
+
+# Real credentials stay on your machine only.
+# Copy src/config.example.cpp to src/config.cpp and put your own token in it.
+**/src/config.cpp
+
+# OS junk
+.DS_Store
+Thumbs.db
