@@ -1,15 +1,17 @@
 # Edge AI-Based EV Charging Station
 
-An IoT capstone project that simulates a three-bay EV charging station. Each bay runs on an ESP32 (simulated in [Wokwi](https://wokwi.com/)), reads its own sensors, and reports to a [ThingsBoard](https://thingsboard.cloud/) cloud dashboard.
-
-> **Status: work in progress.** The project is being added to this repository in stages. See the roadmap below.
+An IoT project that simulates a three-bay EV charging station. Each bay runs on an ESP32 (simulated in [Wokwi](https://wokwi.com/)), reads its own sensors, predicts demand on the device, and reports to a [ThingsBoard](https://thingsboard.cloud/) cloud dashboard with remote control and overload alarms.
 
 ## What the system does
 
 1. **Sense**: voltage, current, temperature and plug-in/plug-out status for each bay.
 2. **Predict**: an on-device model estimates arrival probability and charging duration.
 3. **Decide**: local logic picks a load decision (allow, standby, throttle) and drives status LEDs.
-4. **Publish**: telemetry goes to ThingsBoard over MQTT every 5 seconds, with remote relay/throttle control and overload alarms.
+4. **Publish**: telemetry goes to ThingsBoard over MQTT every 5 seconds.
+5. **Control**: relay on/off and throttle level can be set from the dashboard through RPC buttons.
+6. **Alert**: each bay has an overload alarm that fires when current goes above 16 A and clears when it drops back.
+
+A combined Charging Station dashboard shows total station power across all three bays.
 
 ## Hardware (simulated)
 
@@ -26,27 +28,24 @@ An IoT capstone project that simulates a three-bay EV charging station. Each bay
 ## Repository layout
 
 ```
-BAY1/
-  include/    headers (pins, shared state, sensor functions)
-  src/        firmware source
-  test/       Wokwi circuit (diagram.json, wokwi.toml)
+BAY1/ BAY2/ BAY3/
+  include/          headers (pins, shared state, module interfaces)
+  src/              firmware source
+  test/             Wokwi circuit (diagram.json, wokwi.toml)
   platformio.ini
 ```
 
-BAY2 and BAY3 use the same firmware with a different device token and bay ID.
+All three bays run the same firmware. Only the device token and bay ID differ.
+
+## Tech stack
+
+ESP32, C++ (Arduino framework), PlatformIO, Wokwi, MQTT (PubSubClient), ArduinoJson, ThingsBoard Cloud.
 
 ## Setup
 
 1. Install [VS Code](https://code.visualstudio.com/) with the **PlatformIO** and **Wokwi** extensions.
-2. In `BAY1/src/`, copy `config.example.cpp` to `config.cpp`.
-3. Create a device in ThingsBoard and paste its access token into `config.cpp` in place of `YOUR_THINGSBOARD_DEVICE_TOKEN`.
-4. Never commit `config.cpp`. It is listed in `.gitignore`.
+2. In each bay's `src/` folder, copy `config.example.cpp` to `config.cpp`.
+3. Create a device in ThingsBoard for each bay and paste its access token into that bay's `config.cpp` in place of `YOUR_THINGSBOARD_DEVICE_TOKEN`. Set `BAY_ID` to `BAY1`, `BAY2` or `BAY3`.
+4. Build with PlatformIO, then start the simulation with Wokwi.
 
-## Roadmap
-
-- [x] Day 1: hardware simulation, pins, shared state, sensor reading
-- [x] Day 2: Wi-Fi, MQTT telemetry, shared attributes
-- [ ] Day 3: edge AI prediction and load optimization
-- [ ] Day 4: remote control over RPC
-- [ ] Day 5: BAY2 and BAY3
-- [ ] Day 6: dashboards, alarms, presentation and documentation
+`config.cpp` holds your credentials and is listed in `.gitignore`, so it is never committed.
