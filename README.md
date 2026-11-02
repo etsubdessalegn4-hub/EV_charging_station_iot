@@ -45,7 +45,7 @@ BAY2 and BAY3 use the same firmware with a different device token and bay ID.
 ## Roadmap
 
 - [x] Day 1: hardware simulation, pins, shared state, sensor reading
-- [ ] Day 2: Wi-Fi, MQTT telemetry, shared attributes
+- [x] Day 2: Wi-Fi, MQTT telemetry, shared attributes
 - [ ] Day 3: edge AI prediction and load optimization
 - [ ] Day 4: remote control over RPC
 - [ ] Day 5: BAY2 and BAY3
