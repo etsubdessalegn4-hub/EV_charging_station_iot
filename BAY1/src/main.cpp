@@ -5,6 +5,8 @@
 #include "Peripherals.h"
 #include "network.h"
 #include "telemetry.h"
+#include "edge_ai.h"
+#include "optimization.h"
 #include "attributes.h"
 
 unsigned long now;
@@ -42,8 +44,11 @@ void loop()
     {
         last_print = now;
         sample_sensor();
+        runEdgeAIInference();   // arrival probability + predicted duration
+        runOptimization();      // load decision and throttle level
         publishTelemetry();
     }
 
-    update_led_status();
+    applyRelayDutyCycle();   // reflects whichever throttleLevel is active
+    updateLeds();
 }
