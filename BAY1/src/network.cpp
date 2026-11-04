@@ -3,6 +3,7 @@
 #include "network.h"
 #include "config.h"
 #include "attributes.h"
+#include "rpc.h"
 
 WiFiClient espClient;
 PubSubClient mqtt(espClient);
@@ -25,6 +26,7 @@ void connectMQTT() {
     Serial.println(" connected.");
     mqtt.subscribe("v1/devices/me/attributes");
     mqtt.subscribe("v1/devices/me/attributes/response/+");
+    mqtt.subscribe("v1/devices/me/rpc/request/+");
     requestSharedAttributes();
   } else {
     Serial.print(" failed, rc=");
@@ -44,6 +46,12 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
   Serial.print(topicStr);
   Serial.print(" ");
   Serial.println(buf);
+
+  if (topicStr.startsWith("v1/devices/me/rpc/request/")) {
+    String requestId = topicStr.substring(topicStr.lastIndexOf('/') + 1);
+    handleRpc(requestId, buf);
+    return;
+  }
 
   StaticJsonDocument<256> doc;
   DeserializationError err = deserializeJson(doc, buf);

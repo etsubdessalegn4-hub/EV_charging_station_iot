@@ -45,7 +45,9 @@ void loop()
         last_print = now;
         sample_sensor();
         runEdgeAIInference();   // arrival probability + predicted duration
-        runOptimization();      // load decision and throttle level
+        if (!manualOverrideActive) {   // a human RPC command takes priority over the AI decision
+            runOptimization();         // load decision and throttle level
+        }
         publishTelemetry();
     }
 
