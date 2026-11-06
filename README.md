@@ -65,4 +65,3 @@ ESP32, C++ (Arduino framework), PlatformIO, Wokwi, MQTT (PubSubClient), ArduinoJ
 3. Create a device in ThingsBoard for each bay and paste its access token into that bay's `config.cpp` in place of `YOUR_THINGSBOARD_DEVICE_TOKEN`. Set `BAY_ID` to `BAY1`, `BAY2` or `BAY3`.
 4. Build with PlatformIO, then start the simulation with Wokwi.
 
-`config.cpp` holds your credentials and is listed in `.gitignore`, so it is never committed.
